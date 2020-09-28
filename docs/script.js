@@ -360,11 +360,75 @@ function generatePassword(askLength, passContentLower, passContentUpper, passCon
       }
 
     }
-    
+
     console.log(password);
     console.log("Im here: only numbers and special");
     return password;
   }
+
+  if (passContentLower && passContentNum && passContentSpecial && !passContentUpper) {
+    var combine = lowSet.concat(lowSet, numSet, specSet);
+    for (var i = 0; i < askLength; i++) {
+
+      var randomGen = Math.floor(Math.random() * combine.length);
+
+      password += combine[randomGen];
+    }
+
+
+    if (!validateNum(password) || !validateSpecial(password) || !validateLowCase(password)) {
+
+      while (!validateNum(password) || !validateSpecial(password) || !validateLowCase(password)) {
+        password = '';
+        var valCombine = numSet.concat(numSet, specSet, lowSet);
+        for (var i = 0; i < askLength; i++) {
+
+          var randomGen = Math.floor(Math.random() * valCombine.length);
+
+          password += valCombine[randomGen];
+        }
+        console.log('made it here generated new ', password);
+      }
+
+    }
+
+    console.log(password);
+    console.log("Im here: lower, nums, and specials");
+    return password;
+  }
+
+  if (passContentUpper && passContentNum && passContentSpecial && !passContentLower) {
+    var combine = upSet.concat(upSet, numSet, specSet);
+    for (var i = 0; i < askLength; i++) {
+
+      var randomGen = Math.floor(Math.random() * combine.length);
+
+      password += combine[randomGen];
+    }
+
+
+    if (!validateNum(password) || !validateSpecial(password) || !validateUpCase(password)) {
+
+      while (!validateNum(password) || !validateSpecial(password) || !validateUpCase(password)) {
+        password = '';
+        var valCombine = numSet.concat(numSet, specSet, upSet);
+        for (var i = 0; i < askLength; i++) {
+
+          var randomGen = Math.floor(Math.random() * valCombine.length);
+
+          password += valCombine[randomGen];
+        }
+        console.log('made it here generated new ', password);
+      }
+
+    }
+
+    console.log(password);
+    console.log("Im here: upper, nums, and specials");
+    return password;
+  }
+
+
 
 
 }
