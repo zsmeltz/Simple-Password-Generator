@@ -1,6 +1,7 @@
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
 
+//Four arrays for multiple outcomes based on what the user chooses...
 var charSet = ["a", "b", "c", "d", "e" , "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "!", "@", "#", "$","%", "^", "*", "+", "?", "&"];
 var lowSet = ["a", "b", "c", "d", "e" , "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 var upSet = ["A", "B", "C", "D", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
@@ -8,9 +9,10 @@ var numSet = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 var specSet = ["!", "@", "#", "$","%", "^", "*", "+", "?", "&"];
 
 
-// Write password to the #password input
+// Time to get the users personal criteria
 function writePassword() {
 
+  //gets the length of the password the user wants.
   var askLength = prompt("What length would you like the password? It has to be between 8 and 128 characters...");
   console.log(askLength);
 
@@ -20,6 +22,7 @@ function writePassword() {
   }
   alert("Now pick characters of any kind, or all of them: lowercase, uppercase, numbers, and or special characters...");
 
+//Takes the users boolean decisions and stores them in the console.
   var passContentLower = confirm("Would you like lowercase characters in you password?");
   console.log(passContentLower);
   var passContentUpper = confirm("Would you like uppercase characters?");
@@ -45,18 +48,19 @@ passwordText.value = password;
 }
 
 
+//generates the password after validating criteria
 function generatePassword(askLength, passContentLower, passContentUpper, passContentNum, passContentSpecial){
 
   var password = '';
-  console.log(passContentLower, passContentUpper, passContentNum, passContentSpecial);
-
-    if(passContentLower === true && passContentUpper === true && passContentNum === true && passContentSpecial === true){
+  
+  if(passContentLower === true && passContentUpper === true && passContentNum === true && passContentSpecial === true){
+    //This loop, like the rest, generate a random string based on the users decisions. In this case, they want all types of characters so it takes the charSet array from above and generates a random password with the length being whatever the user wants from 8-128 characters.
         for(var i = 0; i < askLength; i++){
           var randomGen = Math.floor(Math.random() * charSet.length);
 
           password += charSet[randomGen];
         }
-
+        // Takes the password and the validate function and makes sure all citeria is present in the password, if not, the password keeps going through the loop until it meets criteria
         if(!validatePassword(password)) {
           let password = "";
           while(validatePassword(password) ===  false) {
@@ -88,28 +92,30 @@ function generatePassword(askLength, passContentLower, passContentUpper, passCon
         return password;
       }
 
-      if(passContentLower && !passContentUpper && !passContentNum && !passContentSpecial){
-        for(var i = 0; i < askLength; i++){
-          var randomGen = Math.floor(Math.random() * lowSet.length);
+  if(passContentLower && !passContentUpper && !passContentNum && !passContentSpecial){
 
-          password += lowSet[randomGen];
-        }
+              for(var i = 0; i < askLength; i++){
+                var randomGen = Math.floor(Math.random() * lowSet.length);
 
-        
-        console.log(password);
-        console.log("Im here: only lower");
-        return password;
+                password += lowSet[randomGen];
+              }
+
+              
+              console.log(password);
+              console.log("Im here: only lower");
+              return password;
       }
 
-      if(passContentNum && !passContentLower && !passContentUpper && !passContentSpecial){
-        for(var i = 0; i < askLength; i++){
-          var randomGen = Math.floor(Math.random() * numSet.length);
+  if(passContentNum && !passContentLower && !passContentUpper && !passContentSpecial){
 
-          password += numSet[randomGen];
-        }
-        console.log(password);
-        console.log("Im here: only Numbers");
-        return password;
+              for(var i = 0; i < askLength; i++){
+                var randomGen = Math.floor(Math.random() * numSet.length);
+
+                password += numSet[randomGen];
+              }
+              console.log(password);
+              console.log("Im here: only Numbers");
+              return password;
       }
 
   if(passContentSpecial && !passContentLower && !passContentUpper && !passContentNum){
@@ -133,6 +139,7 @@ function generatePassword(askLength, passContentLower, passContentUpper, passCon
 
               password += combine[randomGen];
             }
+
             console.log(password);
             console.log("Im here: upper and lower only");
             return password;
@@ -140,56 +147,35 @@ function generatePassword(askLength, passContentLower, passContentUpper, passCon
     }
 
   if(passContentLower === true && passContentUpper === true && passContentNum === true && !passContentSpecial){
-
+              
             for(var i = 0; i < askLength; i++){
               var combine = lowSet.concat(lowSet, upSet, numSet);
               var randomGen = Math.floor(Math.random() * combine.length);
 
               password += combine[randomGen];
             }
-
-            if(!validateLowCase(password)) {
+            //Here, there are three validation fucntions this peticular password is going through. This if statement and while loop combine all three validations and sends the password into an infinate loop until it meets all criteria. 
+            if(!validateLowCase(password) && !validateUpCase(password) && !validateNum(password)) {
+              //sets the password to a blank string everytime it goes through the loop. We don't want a password any longer than designated.
               let password = "";
-              while(validateLowCase(password) ===  false) {
+              while(validateLowCase(password) ===  false && validateUpCase(password) === false && validateNum(password) === false) {
               for(var i = 0; i < askLength; i++){
-                var randomGen = Math.floor(Math.random() * lowSet.length);
+                var valCombine = lowSet.concat(lowSet, upSet, numSet);
+                var randomGen = Math.floor(Math.random() * valCombine.length);
                 
-                password += lowSet[randomGen];
+                password += valCombine[randomGen];
               }
             }
               
             }
 
-            if(!validateUpCase(password)) {
-              let password = "";
-              while(validateUpCase(password) ===  false) {
-              for(var i = 0; i < askLength; i++){
-                var randomGen = Math.floor(Math.random() * upSet.length);
-                
-                password += upSet[randomGen];
-              }
-            }
-              
-          }
-
-          if(!validateNum(password)) {
-            let password = "";
-            while(validateNum(password) ===  false) {
-            for(var i = 0; i < askLength; i++){
-              var randomGen = Math.floor(Math.random() * numSet.length);
-              
-              password += numSet[randomGen];
-            }
-          }
-            
-          }
 
             console.log(password);
             console.log("Im here: lower, upper, and numbers");
             return password;
           }
 
-  if(passContentLower === true && passContentUpper === true && passContentSpecial=== true && !passContentNum){
+  if(passContentLower === true && passContentUpper === true && passContentSpecial === true && !passContentNum){
 
             for(var i = 0; i < askLength; i++){
               var combine = lowSet.concat(lowSet, upSet, specSet);
@@ -198,40 +184,17 @@ function generatePassword(askLength, passContentLower, passContentUpper, passCon
               password += combine[randomGen];
             }
 
-            if(!validateLowCase(password)) {
+            if(!validateLowCase(password) && !validateUpCase(password) && !validateSpecial(password)) {
               let password = "";
-              while(validateLowCase(password) ===  false) {
+              while(validateLowCase(password) ===  false && validateUpCase(password) === false && validateSpecial(password) === false) {
               for(var i = 0; i < askLength; i++){
-                var randomGen = Math.floor(Math.random() * lowSet.length);
+                var valCombine = lowSet.concat(lowSet, upSet, specSet);
+                var randomGen = Math.floor(Math.random() * valCombine.length);
                 
-                password += lowSet[randomGen];
+                password += valCombine[randomGen];
               }
             }
               
-            }
-
-            if(!validateUpCase(password)) {
-              let password = "";
-              while(validateUpCase(password) ===  false) {
-              for(var i = 0; i < askLength; i++){
-                var randomGen = Math.floor(Math.random() * upSet.length);
-                
-                password += upSet[randomGen];
-              }
-            }
-              
-          }
-
-          if(!validateSpecial(password)) {
-            let password = "";       
-            while(validateSpecial(password) ===  false) {
-            for(var i = 0; i < askLength; i++){
-              var randomGen = Math.floor(Math.random() * specSet.length);
-              
-              password += specSet[randomGen];
-            }
-          }
-            
           }
 
             console.log(password);
@@ -318,7 +281,7 @@ function generatePassword(askLength, passContentLower, passContentUpper, passCon
   
 }
 
-
+//These functions were made to validate that each character set has its own character in the password based on the boolean criteria the user inputs...
 function validatePassword(password){
   for(var i = 0; i < charSet.length; i++){
     if(password.indexOf(charSet[i]) > -1){
@@ -378,10 +341,6 @@ function validateSpecial(password){
 }
 
    
-
-  
-
-
 
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
